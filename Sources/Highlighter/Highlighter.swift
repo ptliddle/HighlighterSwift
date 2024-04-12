@@ -93,18 +93,8 @@ open class Highlighter {
     
     //MARK: - Primary Functions
     
-    /**
-    Highlight the supplied code in the specified language.
     
-    - Parameters:
-     - code:         The source code to highlight.
-     - languageName: The language in which the code is written.
-     - doFastRender: Should fast rendering be used? Default: `true`.
-     
-     - Returns: The highlighted code as an NSAttributedString, or `nil`
-    */
-    open func highlight(_ code: String, as languageName: String? = nil, doFastRender: Bool = true) -> NSAttributedString? {
-
+    open func highlightHTML(_ code: String, as languageName: String? = nil, doFastRender: Bool = true) -> String? {
         let returnValue: JSValue
         
         if let language = languageName {
@@ -130,6 +120,24 @@ open class Highlighter {
         if renderedHTMLString == "undefined" {
             return nil
         }
+        
+        return renderedHTMLString
+    }
+    
+    
+    /**
+    Highlight the supplied code in the specified language.
+    
+    - Parameters:
+     - code:         The source code to highlight.
+     - languageName: The language in which the code is written.
+     - doFastRender: Should fast rendering be used? Default: `true`.
+     
+     - Returns: The highlighted code as an NSAttributedString, or `nil`
+    */
+    open func highlight(_ code: String, as languageName: String? = nil, doFastRender: Bool = true) -> NSAttributedString? {
+
+        guard var renderedHTMLString = highlightHTML(code, as: languageName, doFastRender: doFastRender) else { return nil }
 
         // Convert the HTML received from Highlight.js to an NSAttributedString or nil
         var returnAttrString: NSAttributedString? = nil
